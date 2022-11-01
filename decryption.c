@@ -1,59 +1,70 @@
-//still get many WAs
 #include<stdio.h>
 #include<string.h>
 int main(){
     int n;
     char plaintext[] = "the quick brown fox jumps over the lazy dog";
-    scanf("%d\n\n", &n);
+    scanf("%d\n", &n);
     while(n--){
-        char data[200][2000];
-        char key[] = "the quick brown fox jumps over the lazy dog";
+        char data[105][100];
         int k = 0;
-        while(1){
-            gets(data[k]);
-            if(data[k][0] == '\0' || data[k] == NULL) break;
-            //printf("%s\n", data[k]);
+
+        // input a case
+        while(gets(data[k]) != NULL && data[k][0] != '\0'){
             k++;
         }
-        //printf("%d\n", k);
+         
+        // sometimes output an extra line 
+        // because in the end of input data[k] will not be NULL
+        // but gets() will return NULL when it doesn't read anything
+        /*while(1){
+            gets(data[k]);
+            if(data[k][0] == '\0' || data[k] == NULL) break;
+            k++;
+        }*/
+
+        // same = 0 => key is found
+        // flag = 0 => no key is found 
         int same = 1, flag = 0;
+        char map[27];
         for(int i = 0; i < k; i++){ // num of string
             if(strlen(plaintext) != strlen(data[i])) continue;
+            same = 1;
+            for(int j = 0; j < 26; j++){
+                map[j] = '@';
+            }
+            map[26] = '\0';
             for(int j = 0; j < strlen(data[i]); j++){
                 if((data[i][j] == ' ' && plaintext[j] != ' ') || (data[i][j] != ' ' && plaintext[j] == ' ')){
                     same = 0;
                     break;
+                } 
+                if(data[i][j] != ' '){
+                    if(map[data[i][j]-'a'] != '@' && map[data[i][j]-'a'] != plaintext[j]){
+                        same = 0;
+                        break;
+                    } else {
+                        map[data[i][j]-'a'] = plaintext[j];
+                    }
                 }
             }
-            if(same == 1){
-                strcpy(key, data[i]);
+            if(same){
                 flag = 1;
                 break;
             }
         }
         if(!flag){
-            printf("No solution.\n");
-            if(n) printf("\n");
+            printf("No solution.");
+            if(n) printf("\n\n");
             continue;
         }
-        char map[26];
-        for(int i = 0; i < strlen(plaintext); i++){
-            map[key[i]-'a'] = plaintext[i];
-        }
-        //printf("%s\n%s\n", key, plaintext);
-        //printf("%s", map);
+        
+        // decrypt the input data and output
         for(int i = 0; i < k; i++){
             for(int j = 0; j < strlen(data[i]); j++){
-                if(data[i][j] == ' ') continue;
-                data[i][j] = map[data[i][j]-'a'];
+                if(data[i][j] == ' ') printf(" ");
+                else printf("%c", map[data[i][j]-'a']);
             }
-        }
-        for(int i = 0; i < k; i++){
-            printf("%s\n", data[i]);
-            //try not to output any \n at the end of output
-            //if(n != 0 || i != k-1){
-            //   printf("\n");
-            //}
+            if(n != 0 || i != k-1) printf("\n");
         }
         if(n) printf("\n");
     }
