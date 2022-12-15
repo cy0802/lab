@@ -16,7 +16,7 @@ int cmp(const void* _a, const void* _b){
 int main(){
     struct Homework homework[10005];
     int n;
-    int scheduled[10005]; // denote how much time remain before time i
+    int scheduled[10005]; 
     while(scanf("%d", &n) && n != -1){
         int maxPoint = 0;
         int maxTime = 0;
